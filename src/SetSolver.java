@@ -7,8 +7,6 @@ import javax.swing.*;
 
 public class SetSolver {
     static Card[][] cardAttributes = new Card[3][4];
-    //delete when upload
-    static StringBuilder testCase = new StringBuilder();
     static ArrayList<Card[]> finalSets = new ArrayList<>();
     static BufferedImage img;
 
@@ -23,42 +21,11 @@ public class SetSolver {
         deconstructImage();
         findSets();
         displaySets();
-        //checkCards();
     }
 
     public static void displaySets() {
         Paint.image = img;
         Paint.displaySets();
-    }
-
-    //delete when upload
-    public static void testCases() {
-        boolean canBeSet;
-        for(int i=0; i<10; i++) {
-            for(int j=i+1; j<11; j++) {
-                for (int k=j+1; k<12; k++) {
-                    canBeSet = isSet(cardAttributes[i/4][i%4], cardAttributes[j/4][j%4], cardAttributes[k/4][k%4]);
-
-                    if(canBeSet) {
-                        testCase.append(i + 1).append(",").append(j + 1).append(",").append(k + 1).append("-");
-                    }
-                }
-            }
-        }
-    }
-
-    //delete when upload
-    public static void checkCards() {
-        for(int i=0; i<3; i++) {
-            for(int j=0; j<4; j++) {
-                System.out.print(cardAttributes[i][j].getColor() + " " +
-                        cardAttributes[i][j].getShape() + " " +
-                        cardAttributes[i][j].getShading() + " " +
-                        cardAttributes[i][j].getNumber());
-
-                System.out.println();
-            }
-        }
     }
 
     /**

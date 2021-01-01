@@ -67,7 +67,7 @@ public class Paint extends JComponent implements Runnable {
             for (int col = 0; col < 4; col++) {
                 idealBounds = SetSolver.cardAttributes[row][col].getCardBounds();
                 if (idealBounds.getWidth() > width) {
-                    System.out.println(width);
+
                     width = idealBounds.getWidth();
                 }
                 if (idealBounds.getHeight() > height) height = idealBounds.getHeight();
@@ -89,7 +89,6 @@ public class Paint extends JComponent implements Runnable {
                 graphics2D.drawRect(cardBounds.getXMid() - width / 2 - rectangleHolder, cardBounds.getYMid() - height / 2 - rectangleHolder, width + 2 * rectangleHolder, height + 2 * rectangleHolder);
 
                 set[j].incrementNumSets();
-                System.out.println(rectangleOffset);
             }
         }
 
