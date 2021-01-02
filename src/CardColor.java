@@ -5,4 +5,3 @@ public enum CardColor {
     OTHER,
     NONE
 }
-
