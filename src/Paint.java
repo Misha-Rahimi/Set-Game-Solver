@@ -145,5 +145,4 @@ public class Paint extends JComponent {
         }
 
     }
-
 }

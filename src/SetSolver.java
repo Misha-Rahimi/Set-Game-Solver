@@ -200,7 +200,8 @@ public class SetSolver {
                 /*The path when travelling down at the x location of the top of a squiggle would cross through the left
                 edge of the squiggle, so the x location needs to move to the right a bit to avoid the left edge
                  */
-                if (card.getShape() == CardShape.SQUIGGLE) pixel = img.getRGB((int) (cardBounds.getXTop() + cardBounds.getWidth() * .1), y);
+                if (card.getShape() == CardShape.SQUIGGLE) pixel = img.getRGB((int) (cardBounds.getXTop() +
+                        cardBounds.getWidth() * .1), y);
 
                 /*For a card with 2 shapes that aren't squiggle's, travelling down at the x location of the top of
                 the shape is sufficient
@@ -264,7 +265,8 @@ public class SetSolver {
      * @param img BufferedImage object of the entire board uploaded by the user
      * @return A CardBound object containing the left, right, top, and bottom bounds of the shapes in a card.
      */
-    public static CardBounds determineCardBounds(int loopXLeft, int loopXRight, int loopYTop, int loopYBottom, BufferedImage img) {
+    public static CardBounds determineCardBounds(int loopXLeft, int loopXRight, int loopYTop, int loopYBottom,
+                                                 BufferedImage img) {
         int xLeft = img.getWidth();
         int xRight = 0;
         int yTop = img.getHeight();
@@ -414,7 +416,6 @@ public class SetSolver {
      */
     public static void findSets() {
         finalSets = new ArrayList<>();
-        Card card = new Card();
 
         for(int i=0; i<10; i++) {
             for(int j=i+1; j<11; j++) {
@@ -429,11 +430,6 @@ public class SetSolver {
             }
         }
     }
-
-    /*
-     * Input: Color object containing a pixel of the image
-     * Return: The color of the pixel as either Red (R), Green (G), Purple (P), or Other (O)
-     */
 
     /**
      * Determines the color of a pixel.
