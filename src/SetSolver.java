@@ -14,7 +14,7 @@ public class SetSolver {
     static BufferedImage img;
 
     public static void main(String[] args) throws Exception {
-        JOptionPane.showMessageDialog(null, "Please select the file containing the image of the" +
+        JOptionPane.showMessageDialog(null, "Please select the file containing the image of the " +
                 "board", "Set Solver", JOptionPane.INFORMATION_MESSAGE);
         if (chooseFile()) {
             deconstructImage();
@@ -182,38 +182,9 @@ public class SetSolver {
         int xRightOfShape = cardBounds.getXRight();
         int yTopOfShape = cardBounds.getYTop();
         int yBottomOfShape = cardBounds.getYBottom();
-
-        //Determine shading of card
-        int numberColoredPixels = 0;
         int pixel;
         int height = yBottomOfShape - yTopOfShape;
         int width = xRightOfShape - xLeftOfShape;
-        CardColor previousColor;
-
-        for (int i = 0; i < 2; i++) {
-            previousColor = CardColor.OTHER;
-            for (int y = yTopOfShape - (height) / 10; y < yBottomOfShape + (height) / 10; y++) {
-                pixel = img.getRGB(((width) / 2 + xLeftOfShape) + i * (width) / 4, y);
-                if (!(colorOfPixel(pixel) == CardColor.OTHER)) numberColoredPixels++;
-                if (!(colorOfPixel(pixel) == previousColor)) {
-                    previousColor = colorOfPixel(pixel);
-                }
-            }
-            //System.out.println(((width) / 2 + xLeftOfShape) + i * (width) / 4);
-            //if less than 10 pixels were colored, the x location was likely in between two figures and it needs to be moved either right or left
-            if (numberColoredPixels >= height / 10) break;
-            else {
-                //System.out.println("was repeated");
-                numberColoredPixels = 0;
-            }
-        }
-
-        if(numberColoredPixels < .3 * height) card.setShading(CardShading.EMPTY);
-        else if(numberColoredPixels > .75 * height) card.setShading(CardShading.FULL);
-        else card.setShading(CardShading.PARTIALLY);
-        //shadingValues.add((double) numberColoredPixels / height);
-        //System.out.println((double) numberColoredPixels / height);
-        //System.out.println("num colored pixels " + numberColoredPixels + " height " + height);
 
         //Determine number of shapes on card
         if((width) < (height) * .75) card.setNumber(1);
@@ -221,6 +192,8 @@ public class SetSolver {
         else card.setNumber(2);
         /*System.out.println("width " + width + " height " + height);
         System.out.println("to determine number of shapes " + (double) height / width);*/
+
+
 
         //Determine shape of card
         int xLocDivot = 0;
@@ -260,6 +233,63 @@ public class SetSolver {
             }
         }
 
+        /*for (int i = 0; i < 3; i+= 2) {
+            previousColor = CardColor.OTHER;
+            for (int y = yTopOfShape - (height) / 10; y < yBottomOfShape + (height) / 10; y++) {
+                pixel = img.getRGB(((width) / 2 + xLeftOfShape) + i * (width) / 4, y);
+                if (!(colorOfPixel(pixel) == CardColor.OTHER)) numberColoredPixels++;
+                if (!(colorOfPixel(pixel) == previousColor)) {
+                    previousColor = colorOfPixel(pixel);
+                }
+            }
+            //System.out.println(((width) / 2 + xLeftOfShape) + i * (width) / 4);
+            //if less than 10 pixels were colored, the x location was likely in between two figures and it needs to be moved either right or left
+            if (numberColoredPixels >= height / 10) break;
+            else {
+                //System.out.println("was repeated");
+                numberColoredPixels = 0;
+            }
+        }*/
+        //Determine shading of card
+        int numberColoredPixels = 0;
+        int yStart = yBottomOfShape;
+        int yLast = 0;
+        CardColor previousColor = CardColor.OTHER;
+
+        System.out.println(cardBounds.getxTop() + cardBounds.getWidth() * .1);
+
+        for (int y = yTopOfShape + (height) / 8; y < yBottomOfShape - (height) / 8; y++) {
+            if (card.getNumber() == 2) {
+                if (card.getShape() == CardShape.SQUIGGLE) pixel = img.getRGB((int) (cardBounds.getxTop() + cardBounds.getWidth() * .1), y);
+                else pixel = img.getRGB(cardBounds.getxTop(), y);
+            }
+            else pixel = img.getRGB(cardBounds.getXLeft() + cardBounds.getWidth() / 2, y);
+
+            if (!(colorOfPixel(pixel) == CardColor.OTHER)) {
+                numberColoredPixels++;
+                if (y < yStart) yStart = y;
+                if (y > yLast) yLast = y;
+            }
+            if (!(colorOfPixel(pixel) == previousColor)) {
+                previousColor = colorOfPixel(pixel);
+            }
+        }
+        //System.out.println("y last " + yLast + " y start " + yStart + " new height " + (yLast - yStart) + " real height " + height);
+        //System.out.println("numcolored " + numberColoredPixels + " tolerance to be empty " + .3 * height);
+        //int heightRanThrough = yLast - yStart;
+        double heightRanThrough = yBottomOfShape - yTopOfShape - (height) / 4;
+        double portionColored = numberColoredPixels / heightRanThrough;
+        System.out.println("percent " + (double) numberColoredPixels / heightRanThrough);
+
+        if(portionColored < .1) card.setShading(CardShading.EMPTY);
+        else if(portionColored > .85) card.setShading(CardShading.FULL);
+        else card.setShading(CardShading.PARTIALLY);
+        //shadingValues.add((double) numberColoredPixels / height);
+        //System.out.println((double) numberColoredPixels / height);
+        //System.out.println("num colored pixels " + numberColoredPixels + " height " + height);
+
+
+
 
         //Determine color of shape
         int numRedPixels = 0;
@@ -288,6 +318,7 @@ public class SetSolver {
         int xRight = 0;
         int yTop = img.getHeight();
         int yBottom = 0;
+        int xTop = 0;
         int coloredPixelsCount = 0;
 
         for (int x = loopXLeft; x < loopXRight; x++) {
@@ -297,14 +328,19 @@ public class SetSolver {
                     if (coloredPixelsCount > 5) {
                         if (x < xLeft) xLeft = x;
                         if (x > xRight) xRight = x;
-                        if (y < yTop) yTop = y;
+                        if (y < yTop) {
+                            yTop = y;
+                            xTop = x;
+                        }
                         if (y > yBottom) yBottom = y;
                     }
                 } else coloredPixelsCount = 0;
             }
         }
+        CardBounds cardBounds = new CardBounds(xLeft, xRight, yBottom, yTop - 5);
+        cardBounds.setXTop(xTop);
 
-        return new CardBounds(xLeft, xRight, yBottom, yTop - 5);
+        return cardBounds;
     }
 
     public static int determineLeftOfShape(int xLeft, int xRight, int yTop, int yBottom, BufferedImage img) {
@@ -436,7 +472,7 @@ public class SetSolver {
                 topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 frame.add(topPanel, BorderLayout.NORTH);
                 frame.add(bottomPanel, BorderLayout.SOUTH);
-                frame.setSize(1200, 700);
+                frame.setSize(1200, 675);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setVisible(true);

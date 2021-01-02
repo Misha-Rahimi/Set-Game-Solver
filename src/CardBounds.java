@@ -2,6 +2,7 @@ public class CardBounds {
     private int xLeft;
     private int xRight;
     private int yTop;
+    private int xTop;
     private int yBottom;
 
     public CardBounds() {
@@ -73,6 +74,10 @@ public class CardBounds {
         return yTop;
     }
 
+    public int getxTop() {
+        return xTop;
+    }
+
     public void setXLeft(int xLeft) {
         this.xLeft = xLeft;
     }
@@ -87,5 +92,9 @@ public class CardBounds {
 
     public void setYTop(int yTop) {
         this.yTop = yTop;
+    }
+
+    public void setXTop(int xTop) {
+        this.xTop = xTop;
     }
 }
