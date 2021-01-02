@@ -1,4 +1,3 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,7 +16,6 @@ import java.awt.image.BufferedImage;
 
 public class Paint extends JComponent {
     private Image image; // the canvas
-    private BufferedImage bufferedImage;
     private Graphics2D graphics2D;  // this will enable drawing
     public static boolean repainting = false;
 
@@ -29,7 +27,8 @@ public class Paint extends JComponent {
     public void paintComponent(Graphics g) {
         this.image = SetSolver.img;
 
-        if (image instanceof BufferedImage)
+        BufferedImage bufferedImage;
+        if (image != null)
         {
             bufferedImage = (BufferedImage) image;
         } else {
@@ -56,27 +55,20 @@ public class Paint extends JComponent {
                 highestNumShapesRight = SetSolver.cardAttributes[row][3].getNumber();
         }
 
-        System.out.println(highestNumShapesLeft);
-        System.out.println(highestNumShapesRight);
-
         double multiplier = 0;
         switch (highestNumShapesLeft) {
             case 3 -> multiplier = .05;
             case 2 -> multiplier = .08;
             case 1 -> multiplier = .13;
         }
-        System.out.println(boardBounds.getXLeft());
         boardBounds.setXLeft((int) (boardBounds.getXLeft() - boardBounds.getWidth() * multiplier));
-        System.out.println(boardBounds.getXRight());
 
         switch (highestNumShapesRight) {
             case 3 -> multiplier = .05;
             case 2 -> multiplier = .08;
             case 1 -> multiplier = .13;
         }
-        System.out.println(boardBounds.getXLeft());
         boardBounds.setXRight((int) (boardBounds.getXRight() + boardBounds.getWidth() * multiplier));
-        System.out.println(boardBounds.getXLeft());
 
         int left, right, top, bottom;
         if ((left = boardBounds.getXLeft()) < 0) left = 0;
@@ -84,22 +76,11 @@ public class Paint extends JComponent {
         if ((top = boardBounds.getYTop()) < 0) top = 0;
         if ((bottom = boardBounds.getYBottom()) >= bufferedImage.getHeight()) bottom = bufferedImage.getHeight() - 1;
 
-        System.out.println("left " + left + " right " + right + " width " + (right - left) + " actual width " + bufferedImage.getWidth());
-        System.out.println("xleft " + boardBounds.getXLeft() + " xright " + boardBounds.getXRight() + " width " + boardBounds.getWidth());
-
         bufferedImage = bufferedImage.getSubimage(left, top, right - left, bottom - top);
 
-        /* this lets us draw on the image (ie. the canvas)*/
         graphics2D = (Graphics2D) image.getGraphics();
 
-        /* gives us better rendering quality for the drawing lines */
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-
-        /* set canvas to white with default paint color */
-        graphics2D.setPaint(Color.black);
-        graphics2D.setStroke(new BasicStroke(2));
-
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         drawSets();
 
@@ -116,7 +97,7 @@ public class Paint extends JComponent {
         int rectangleOffset;
         int width = 0;
         int height = 0;
-        CardBounds idealBounds = new CardBounds(0, 0, 0, 0);
+        CardBounds idealBounds;
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 4; col++) {
                 idealBounds = SetSolver.cardAttributes[row][col].getCardBounds();
