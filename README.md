@@ -9,7 +9,7 @@ For example, a user could upload the picture below.
 
 This program would then display the following.
 
-![](SampleImages/Sample%20Output.png)
+![](SampleImages/Sample%20Output.JPG)
 
 A set comprises 3 cards, and is displayed by outlining each of the three cards with a unique color.
 
