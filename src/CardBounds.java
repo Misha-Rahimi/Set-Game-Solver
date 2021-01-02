@@ -1,22 +1,39 @@
-public class CardBounds {
-    private int xLeft;
-    private int xRight;
-    private int yTop;
-    private int xTop;
-    private int yBottom;
+/**
+ * Class representing the left, right, top, and bottom bounds of a rectangular region enclosing the shape(s) in a card.
+ */
 
-    public CardBounds() {
-        this.xLeft = 0;
-        this.xRight = 0;
-        this.yBottom = 0;
-        this.yTop = 0;
-    }
+public class CardBounds {
+    private int xLeft; //x coordinate for the left bound
+    private int xRight; //x coordinate for the right bound
+    private int yTop; //y coordinate for the top bound
+    private int xTop; //x coordinate for the top bound
+    private int yBottom; //y coordinate for the bottom bound
 
     public CardBounds(int xLeft, int xRight, int yBottom, int yTop) {
         this.xLeft = xLeft;
         this.xRight = xRight;
         this.yBottom = yBottom;
         this.yTop = yTop;
+    }
+
+    public int getXLeft() {
+        return xLeft;
+    }
+
+    public int getXRight() {
+        return xRight;
+    }
+
+    public int getYTop() {
+        return yTop;
+    }
+
+    public int getXTop() {
+        return xTop;
+    }
+
+    public int getYBottom() {
+        return yBottom;
     }
 
     public int getWidth() {
@@ -35,47 +52,10 @@ public class CardBounds {
         return this.yBottom - this.yTop;
     }
 
-    public void increaseWidth(double percentIncrease) {
-        int change = (int) ((this.xRight - this.xLeft) * (percentIncrease / 2.0));
-        this.xLeft -= change;
-        this.xRight += change;
-    }
-
-    public CardBounds increaseWidth(double percentIncrease, int anchor) {
-        int change = (int) ((this.xRight - this.xLeft) * percentIncrease);
-        int newLeft = this.xLeft;
-        int newRight = this.xRight;
-
-        if (anchor == 1) newRight += change;
-        else newLeft -= change;
-
-        return new CardBounds(newLeft, newRight, this.yBottom, this.yTop);
-    }
-
     public void increaseHeight(double percentIncrease) {
         int change = (int) ((this.yBottom - this.yTop) * (percentIncrease / 2.0));
         this.yTop -= change;
         this.yBottom += change;
-    }
-
-    public int getXLeft() {
-        return xLeft;
-    }
-
-    public int getXRight() {
-        return xRight;
-    }
-
-    public int getYBottom() {
-        return yBottom;
-    }
-
-    public int getYTop() {
-        return yTop;
-    }
-
-    public int getxTop() {
-        return xTop;
     }
 
     public void setXLeft(int xLeft) {

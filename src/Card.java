@@ -1,3 +1,7 @@
+/**
+ * Class representing a card.
+ */
+
 public class Card {
     private CardColor color;
     private CardShading shading;
@@ -14,20 +18,28 @@ public class Card {
         currentNumSets = 1;
     }
 
-    public int getCurrentNumSets() {
-        return currentNumSets;
+    public CardColor getColor() {
+        return color;
     }
 
-    public void incrementNumSets() {
-        currentNumSets++;
+    public CardShading getShading() {
+        return shading;
+    }
+
+    public CardShape getShape() {
+        return shape;
+    }
+
+    public int getNumber() {
+        return number;
     }
 
     public CardBounds getCardBounds() {
         return cardBounds;
     }
 
-    public void setCardBounds(CardBounds cardBounds) {
-        this.cardBounds = cardBounds;
+    public int getCurrentNumSets() {
+        return currentNumSets;
     }
 
     public void setColor(CardColor newColor) {
@@ -46,21 +58,14 @@ public class Card {
         number = newNumber;
     }
 
-    public CardColor getColor() {
-        return color;
+    public void setCardBounds(CardBounds cardBounds) {
+        this.cardBounds = cardBounds;
     }
 
-    public CardShading getShading() {
-        return shading;
+    public void incrementNumSets() {
+        currentNumSets++;
     }
 
-    public CardShape getShape() {
-        return shape;
-    }
-
-    public int getNumber() {
-        return number;
-    }
 
 
 }
