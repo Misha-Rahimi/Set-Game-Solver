@@ -26,6 +26,6 @@ This program won't work if a user uploads a Set Board with any green, red, or pu
 
 ## Future Improvements
 Here are some things that I'd like to add to this project:
-*Displaying sets- It's sometimes hard to make out all the different colors of rectangles and find each card in a set. I'd like to add a feature where whenever a user hovers their mouse over a card, it'll only show the other cards in its set and gray out the rest.
-*Solve set boards that aren't from the Daily Set Puzzle Website- As of right now, this program only works on set boards from this website. I'd like to be able to play an actual game with 12 cards on a table, and be able to take a picture of the playing surface and find all the sets.
-*Convert to an app- After completing the above item, I would turn this program into an app and be able to instantly find all the sets when playing a game with friends and family
+* Displaying sets- It's sometimes hard to make out all the different colors of rectangles and find each card in a set. I'd like to add a feature where whenever a user hovers their mouse over a card, it'll only show the other cards in its set and gray out the rest.
+* Solve set boards that aren't from the Daily Set Puzzle Website- As of right now, this program only works on set boards from this website. I'd like to be able to play an actual game with 12 cards on a table, and be able to take a picture of the playing surface and find all the sets.
+* Convert to an app- After completing the above item, I would turn this program into an app and be able to instantly find all the sets when playing a game with friends and family
