@@ -459,7 +459,7 @@ public class SetSolver {
      */
     public static void displaySets() {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Paint");
+            JFrame frame = new JFrame("Set Solver");
             Container content = frame.getContentPane();
             content.setLayout(new BorderLayout());
 
