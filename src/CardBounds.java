@@ -4,6 +4,13 @@ public class CardBounds {
     private int yTop;
     private int yBottom;
 
+    public CardBounds() {
+        this.xLeft = 0;
+        this.xRight = 0;
+        this.yBottom = 0;
+        this.yTop = 0;
+    }
+
     public CardBounds(int xLeft, int xRight, int yBottom, int yTop) {
         this.xLeft = xLeft;
         this.xRight = xRight;
@@ -48,17 +55,6 @@ public class CardBounds {
         int change = (int) ((this.yBottom - this.yTop) * (percentIncrease / 2.0));
         this.yTop -= change;
         this.yBottom += change;
-    }
-
-    public CardBounds increaseHeight(double percentIncrease, int anchor) {
-        int change = (int) ((this.yBottom - this.yTop) * percentIncrease);
-        int newTop = this.yTop;
-        int newBottom = this.yBottom;
-
-        if (anchor == 1) newBottom += change;
-        else newTop -= change;
-
-        return new CardBounds(this.xLeft, this.xRight, newBottom, newTop);
     }
 
     public int getXLeft() {

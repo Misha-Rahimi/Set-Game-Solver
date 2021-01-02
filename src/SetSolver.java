@@ -1,32 +1,65 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class SetSolver {
     static Card[][] cardAttributes = new Card[3][4];
-    static ArrayList<Card[]> finalSets = new ArrayList<>();
+    static ArrayList<Card[]> finalSets;
     static BufferedImage img;
 
     public static void main(String[] args) throws Exception {
+        JOptionPane.showMessageDialog(null, "Please select the file containing the image of the" +
+                "board", "Set Solver", JOptionPane.INFORMATION_MESSAGE);
+        if (chooseFile()) {
+            deconstructImage();
+            findSets();
+            displaySets();
+            checkCards();
+        }
+    }
+
+    public static boolean chooseFile() throws IOException {
         //User selects file containing the image of the board
-        JFileChooser jf = new JFileChooser();
+        JFileChooser jf = new JFileChooser("C:\\Users\\rahim\\OneDrive\\Desktop\\Random\\Images");
         jf.setDialogTitle("Choose Image File");
-        jf.showOpenDialog(null);
-        File file = jf.getSelectedFile();
-        img = ImageIO.read(file);
-
-        deconstructImage();
-        findSets();
-        displaySets();
+        int result = jf.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = jf.getSelectedFile();
+            img = ImageIO.read(file);
+            try {
+                img.getHeight();
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(null, "Please select an image file", "Set Solver",
+                        JOptionPane.INFORMATION_MESSAGE);
+                chooseFile();
+            }
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Sorry to see you go!", "Set Solver",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
     }
 
-    public static void displaySets() {
-        Paint.image = img;
-        Paint.displaySets();
+    public static void checkCards() {
+        for(int i=0; i<3; i++) {
+            for(int j=0; j<4; j++) {
+                System.out.print(cardAttributes[i][j].getColor() + " " +
+                        cardAttributes[i][j].getShape() + " " +
+                        cardAttributes[i][j].getShading() + " " +
+                        cardAttributes[i][j].getNumber());
+
+                System.out.println();
+            }
+        }
     }
+
 
     /**
      * Determines the x and y coordinate ranges that the 12 cards lie in using the determineCardBounds method, then
@@ -54,22 +87,49 @@ public class SetSolver {
          */
         double percentIncrease = 0.0;
         int anchor = -1;
+        System.out.println(boardBounds.getWidth() + " "+img.getWidth());
+        System.out.println("original " + boardBounds.getXLeft() + " " + boardBounds.getXRight());
         CardBounds confirmBounds = boardBounds;
+        /*try {
+            while (!boardBoundsCorrect(confirmBounds)) {
+                anchor *= -1;
+                if (anchor == 1) percentIncrease += .01;
 
-        while (!boardBoundsCorrect(confirmBounds, img)) {
-            anchor *= -1;
-            if (anchor == 1) percentIncrease += .01;
-            confirmBounds = boardBounds.increaseWidth(percentIncrease, anchor);
+                int change = (int) (boardBounds.getWidth() * percentIncrease);
+                int newLeft = boardBounds.getXLeft();
+                int newRight = boardBounds.getXRight();
+
+                if (anchor == 1)
+                    newRight += change;
+                else
+                    newLeft -= change;
+
+
+                confirmBounds = new CardBounds(newLeft, newRight, boardBounds.getYBottom(), boardBounds.getYTop());
+
+                System.out.println("attempting " + (anchor * change) +" " + confirmBounds.getWidth() + " = " + confirmBounds.getXRight() + " - " + confirmBounds.getXLeft());
+
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+
+            System.out.println("exited loop");
+        }*/
+        for (int right = boardBounds.getXRight(); right < img.getWidth(); right++) {
+            for (int left = boardBounds.getXLeft(); left > 0; left--) {
+                if (boardBoundsCorrect(new CardBounds(left, right, boardBounds.getYBottom(), boardBounds.getYTop()))) {
+                    boardBounds.setXLeft(left);
+                    boardBounds.setXRight(right);
+                    right = img.getWidth();
+                    break;
+                }
+            }
         }
-
-        confirmBounds.increaseHeight(.05);
 
         boardBounds = confirmBounds;
 
+        System.out.println("final " + boardBounds.getXLeft() + " " + boardBounds.getXRight());
         height = boardBounds.getYBottom() - boardBounds.getYTop();
         width = boardBounds.getXRight() - boardBounds.getXLeft();
-
-        //System.out.println("xLeft " + cb.getXLeft() + " xRight " + cb.getXRight() + " yTop " + cb.getYTop() + " bottom " + cb.getYBottom());
 
         //Loops through all 12 sections of the board
         for (int row = 0; row < 3; row++) {
@@ -98,18 +158,19 @@ public class SetSolver {
     /**
      * Determines whether a CardBounds object properly outlines the region of the board.
      * @param cardBounds CardBounds object outlining a region on the board.
-     * @param img BufferedImage object of the board
      * @return When divided into 12 equal regions, if the borders between the regions have any colored pixels, return
      * false, otherwise return true;
      * @throws InvalidBoardException if the coordinates in cardBounds aren't on the image
      */
-    public static boolean boardBoundsCorrect(CardBounds cardBounds, BufferedImage img) throws InvalidBoardException {
+    public static boolean boardBoundsCorrect(CardBounds cardBounds) throws InvalidBoardException {
         int xLocation;
         for (int col = 0; col < 4; col++) {
-            xLocation = ((cardBounds.getXRight() - cardBounds.getXLeft()) / 4) * col + cardBounds.getXLeft();
-            if (xLocation >= img.getWidth()) throw new InvalidBoardException();
+            xLocation = (cardBounds.getWidth() / 4) * col + cardBounds.getXLeft();
+            //System.out.println(col);
             for (int row = cardBounds.getYTop(); row < cardBounds.getYBottom(); row++) {
-                if (!(colorOfPixel(img.getRGB(xLocation, row)) == CardColor.OTHER)) return false;
+                if (!(colorOfPixel(img.getRGB(xLocation, row)) == CardColor.OTHER)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -206,7 +267,7 @@ public class SetSolver {
         int numPurplePixels = 0;
         int yMid = width / 2 + cardBounds.getYTop();
 
-        for (int x = xLeftOfShape - 20; x < xRightOfShape  + 20; x++) {
+        for (int x = xLeftOfShape - 20; x < xRightOfShape + 20; x++) {
             pixel = img.getRGB(x, yMid);
 
             if(colorOfPixel(pixel) == CardColor.RED) numRedPixels++;
@@ -296,6 +357,7 @@ public class SetSolver {
      */
     public static void findSets() {
         boolean canBeSet;
+        finalSets = new ArrayList<>();
         StringBuilder setsFound = new StringBuilder("The following are sets:\n");
         for(int i=0; i<10; i++) {
             for(int j=i+1; j<11; j++) {
@@ -335,5 +397,50 @@ public class SetSolver {
             return CardColor.PURPLE;
         }
         else return CardColor.OTHER;
+    }
+
+    public static void displaySets() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JFrame frame = new JFrame("Paint");
+                Container content = frame.getContentPane();
+                content.setLayout(new BorderLayout());
+                Paint paint = new Paint(img);
+                content.add(paint, BorderLayout.CENTER);
+
+                JPanel topPanel = new JPanel();
+                JLabel topText = new JLabel("Number of sets found: " + SetSolver.finalSets.size());
+                topPanel.add(topText);
+                JButton returnButton = new JButton("Solve another set board");
+                returnButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            frame.dispose();
+                            Paint.repainting = false;
+                            if (SetSolver.chooseFile()) {
+                                SetSolver.deconstructImage();
+                                SetSolver.findSets();
+                                SetSolver.displaySets();
+                                SetSolver.checkCards();
+                            }
+                        } catch (IOException | InvalidBoardException ioException) {
+                            ioException.printStackTrace();
+                        }
+                    }
+                });
+                JPanel bottomPanel = new JPanel();
+                bottomPanel.add(returnButton);
+                bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                frame.add(topPanel, BorderLayout.NORTH);
+                frame.add(bottomPanel, BorderLayout.SOUTH);
+                frame.setSize(1200, 700);
+                frame.setLocationRelativeTo(null);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.setVisible(true);
+            }
+        });
     }
 }
