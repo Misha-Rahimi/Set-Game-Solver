@@ -64,7 +64,7 @@ public class SetSolver {
         The boardBounds object contains the x and y coordinates for the first occurrence of a colored pixel when
         traveling to the center of the board from the left, right, top, and bottom edges
         */
-        CardBounds boardBounds = determineCardBounds(0, img.getWidth(), 0, img.getHeight(), img);
+        CardBounds boardBounds = determineCardBounds(0, img.getWidth(), 0, img.getHeight(), img);System.out.println(boardBounds.getXLeft() + " " + boardBounds.getXRight() + " " + boardBounds.getYTop() + " " + boardBounds.getYBottom());
 
         /*
         The boardBounds object currently outlines a rectangular region bordering the edges of the shapes within the
@@ -120,6 +120,7 @@ public class SetSolver {
         for (int col = 0; col < 4; col++) {
             xLocation = (cardBounds.getWidth() / 4) * col + cardBounds.getXLeft();
             for (int row = cardBounds.getYTop(); row < cardBounds.getYBottom(); row++) {
+                System.out.println(xLocation + " " + row + " " + img.getWidth());
                 if (!(colorOfPixel(img.getRGB(xLocation, row)) == CardColor.OTHER)) return false;
             }
         }
@@ -281,7 +282,7 @@ public class SetSolver {
                     if (coloredPixelsCount > 5) {
                         if (x < xLeft) xLeft = x;
                         if (x > xRight) xRight = x;
-                        if (y < yTop) {
+                        if (y < yTop && y > 5) {
                             yTop = y;
                             xTop = x;
                         }
@@ -290,6 +291,7 @@ public class SetSolver {
                 } else coloredPixelsCount = 0;
             }
         }
+
         CardBounds cardBounds = new CardBounds(xLeft, xRight, yBottom, yTop - 5);
         cardBounds.setXTop(xTop);
 
