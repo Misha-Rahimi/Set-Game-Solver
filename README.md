@@ -3,11 +3,11 @@
 ## Overview
 This program allows a user to upload a picture of a set board from the [Daily SET Puzzle](https://www.setgame.com/set/puzzle), and displays the board with colored rectangles around the cards of a set.
 
-For example, a user could upload the picture below.
+For example, a user could upload the picture below:
 
 ![](SampleImages/Sample%20Input.JPG)
 
-This program would then display the following.
+This program would then display the following:
 
 ![](SampleImages/Sample%20Output.JPG)
 
