@@ -5,7 +5,7 @@ This program allows a user to upload a picture of a set board from the [Daily SE
 
 For example, a user could upload the picture below:
 
-![](SampleImages/Sample%20Input.jpg)
+![](SampleImages/Sample%20Input.JPG)
 
 This program would then display the following:
 
